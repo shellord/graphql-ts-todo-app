@@ -13,6 +13,7 @@ This is a simple GraphQL App that implements a todo list with Next.js.
 
 ## Folder Structure
 
+    -public
     - src
         - components
             - TodoList
@@ -31,5 +32,10 @@ This is a simple GraphQL App that implements a todo list with Next.js.
                 - index.ts
             - schema
                 - index.ts
-
-=
+        .eslintrc.json
+        .gitignore
+        .prettierrc.js
+        next-env.d.ts
+        package.json
+        README.md
+        tsconfig.json
