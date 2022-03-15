@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Input,
-  Spacer,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 
 import Layout from '@/components/layout/Layout'
@@ -31,9 +23,6 @@ const Home: NextPage = () => {
           <Text fontSize='xl'>Todo List</Text>
           <Divider my='3' />
           <Flex direction='column'>
-            <Box mb='5'>
-              <TodoItem content='Do something' />
-            </Box>
             <Box mb='5'>
               <TodoItem content='Do something' />
             </Box>
