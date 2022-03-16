@@ -5,8 +5,12 @@ import type { NextPage } from 'next'
 import Layout from '@/components/layout/Layout'
 import TodoItem from '@/components/todo/TodoItem'
 
+export type Todo = {
+  todos: Todo[]
+}
+
 const Home: NextPage = () => {
-  const { data, loading, error } = useQuery(gql`
+  const { data, loading, error } = useQuery<Todo>(gql`
     query {
       todos {
         id
@@ -14,7 +18,10 @@ const Home: NextPage = () => {
       }
     }
   `)
-  console.log(data)
+
+  if (loading) return <Text>Loading...</Text>
+  if (error) return <Text>Error!</Text>
+  console.log(data?.todos)
   return (
     <Layout>
       <Box mt='10'>
@@ -33,9 +40,14 @@ const Home: NextPage = () => {
           <Text fontSize='xl'>Todo List</Text>
           <Divider my='3' />
           <Flex direction='column'>
-            <Box mb='5'>
-              <TodoItem content='Do something' />
-            </Box>
+            {data &&
+              data.todos.map((item) => {
+                return (
+                  <Box mb='5' key={item.id}>
+                    <TodoItem content={item.content} />
+                  </Box>
+                )
+              })}
           </Flex>
         </Box>
       </Box>
