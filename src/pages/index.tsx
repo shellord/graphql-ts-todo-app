@@ -1,3 +1,4 @@
+import { gql, useQuery } from '@apollo/client'
 import { Box, Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 
@@ -5,6 +6,15 @@ import Layout from '@/components/layout/Layout'
 import TodoItem from '@/components/todo/TodoItem'
 
 const Home: NextPage = () => {
+  const { data, loading, error } = useQuery(gql`
+    query {
+      todos {
+        id
+        content
+      }
+    }
+  `)
+  console.log(data)
   return (
     <Layout>
       <Box mt='10'>
