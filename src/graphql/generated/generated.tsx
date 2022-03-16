@@ -40,7 +40,7 @@ export type Query = {
 
 export type Todo = {
   __typename?: 'Todo'
-  content?: Maybe<Scalars['String']>
+  content: Scalars['String']
   id?: Maybe<Scalars['ID']>
 }
 
@@ -196,7 +196,7 @@ export type TodoResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Todo'] = ResolversParentTypes['Todo'],
 > = {
-  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }

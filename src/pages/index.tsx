@@ -2,15 +2,17 @@ import { gql, useQuery } from '@apollo/client'
 import { Box, Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 
+import { Todo } from '@/graphql/generated/generated'
+
 import Layout from '@/components/layout/Layout'
 import TodoItem from '@/components/todo/TodoItem'
 
-export type Todo = {
+export type Todos = {
   todos: Todo[]
 }
 
 const Home: NextPage = () => {
-  const { data, loading, error } = useQuery<Todo>(gql`
+  const { data, loading, error } = useQuery<Todos>(gql`
     query {
       todos {
         id
