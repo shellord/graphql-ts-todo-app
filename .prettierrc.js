@@ -4,7 +4,12 @@ module.exports = {
   trailingComma: 'all',
   semi: false,
   arrowParens: 'always',
-  importOrder: ['^@/lib/(.*)$', '^@/components/(.*)$', '^[./]'],
+  importOrder: [
+    '^@/graphql/(.*)$',
+    '^@/lib/(.*)$',
+    '^@/components/(.*)$',
+    '^[./]',
+  ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
 }
