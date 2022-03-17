@@ -1,29 +1,17 @@
-import { gql, useQuery } from '@apollo/client'
 import { Box, Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 
-import { Todo } from '@/graphql/generated/generated'
+import { useAllTodosQuery } from '@/graphql/generated'
 
 import Layout from '@/components/layout/Layout'
 import TodoItem from '@/components/todo/TodoItem'
 
-export type Todos = {
-  todos: Todo[]
-}
-
 const Home: NextPage = () => {
-  const { data, loading, error } = useQuery<Todos>(gql`
-    query {
-      todos {
-        id
-        content
-      }
-    }
-  `)
+  const { data, loading, error } = useAllTodosQuery()
 
   if (loading) return <Text>Loading...</Text>
   if (error) return <Text>Error!</Text>
-  console.log(data?.todos)
+
   return (
     <Layout>
       <Box mt='10'>
@@ -42,14 +30,13 @@ const Home: NextPage = () => {
           <Text fontSize='xl'>Todo List</Text>
           <Divider my='3' />
           <Flex direction='column'>
-            {data &&
-              data.todos.map((item) => {
-                return (
-                  <Box mb='5' key={item.id}>
-                    <TodoItem content={item.content} />
-                  </Box>
-                )
-              })}
+            {data?.todos?.map((item) => {
+              return (
+                <Box mb='5' key={item.id}>
+                  <TodoItem content={item.content} />
+                </Box>
+              )
+            })}
           </Flex>
         </Box>
       </Box>

@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import * as Apollo from '@apollo/client'
 import { GraphQLResolveInfo } from 'graphql'
 
 export type Maybe<T> = T | null
@@ -15,6 +16,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>
 }
+const defaultOptions = {} as const
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -35,14 +37,75 @@ export type MutationCreateTodoArgs = {
 
 export type Query = {
   __typename?: 'Query'
-  todos?: Maybe<Array<Maybe<Todo>>>
+  todos: Array<Maybe<Todo>>
 }
 
 export type Todo = {
   __typename?: 'Todo'
   content: Scalars['String']
-  id?: Maybe<Scalars['ID']>
+  id: Scalars['ID']
 }
+
+export type AllTodosQueryVariables = Exact<{ [key: string]: never }>
+
+export type AllTodosQuery = {
+  __typename?: 'Query'
+  todos: Array<{ __typename?: 'Todo'; id: string; content: string } | null>
+}
+
+export const AllTodosDocument = gql`
+  query AllTodos {
+    todos {
+      id
+      content
+    }
+  }
+`
+
+/**
+ * __useAllTodosQuery__
+ *
+ * To run a query within a React component, call `useAllTodosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllTodosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllTodosQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllTodosQuery(
+  baseOptions?: Apollo.QueryHookOptions<AllTodosQuery, AllTodosQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<AllTodosQuery, AllTodosQueryVariables>(
+    AllTodosDocument,
+    options,
+  )
+}
+export function useAllTodosLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AllTodosQuery,
+    AllTodosQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<AllTodosQuery, AllTodosQueryVariables>(
+    AllTodosDocument,
+    options,
+  )
+}
+export type AllTodosQueryHookResult = ReturnType<typeof useAllTodosQuery>
+export type AllTodosLazyQueryHookResult = ReturnType<
+  typeof useAllTodosLazyQuery
+>
+export type AllTodosQueryResult = Apollo.QueryResult<
+  AllTodosQuery,
+  AllTodosQueryVariables
+>
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
 
@@ -186,7 +249,7 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   todos?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Todo']>>>,
+    Array<Maybe<ResolversTypes['Todo']>>,
     ParentType,
     ContextType
   >
@@ -197,7 +260,7 @@ export type TodoResolvers<
   ParentType extends ResolversParentTypes['Todo'] = ResolversParentTypes['Todo'],
 > = {
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
