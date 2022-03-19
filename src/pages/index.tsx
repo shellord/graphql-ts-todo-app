@@ -1,17 +1,42 @@
+import {
+  AllTodosDocument,
+  useAllTodosQuery,
+  useCreateTodoMutation,
+  useDeleteTodoMutation,
+} from '@/types/generated'
 import { Box, Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
-
-import { useAllTodosQuery } from '@/graphql/generated'
+import { useState } from 'react'
 
 import Layout from '@/components/layout/Layout'
 import TodoItem from '@/components/todo/TodoItem'
 
 const Home: NextPage = () => {
   const { data, loading, error } = useAllTodosQuery()
+  const [createTodo] = useCreateTodoMutation()
+  const [deleteTodo] = useDeleteTodoMutation()
+  const [todoText, setTodoText] = useState('')
 
   if (loading) return <Text>Loading...</Text>
   if (error) return <Text>Error!</Text>
 
+  const onTodoAddHandler = () => {
+    createTodo({
+      variables: {
+        content: todoText,
+      },
+      refetchQueries: [{ query: AllTodosDocument }],
+    })
+  }
+
+  const onDeleteTodoHandler = (id: string) => {
+    deleteTodo({
+      variables: {
+        deleteTodoId: id,
+      },
+      refetchQueries: [{ query: AllTodosDocument }],
+    })
+  }
   return (
     <Layout>
       <Box mt='10'>
@@ -20,8 +45,8 @@ const Home: NextPage = () => {
           <Divider my='3' />
 
           <Flex>
-            <Input />
-            <Button ml='5' colorScheme='green'>
+            <Input onChange={(e) => setTodoText(e.target.value)} />
+            <Button ml='5' colorScheme='green' onClick={onTodoAddHandler}>
               Add
             </Button>
           </Flex>
@@ -30,10 +55,13 @@ const Home: NextPage = () => {
           <Text fontSize='xl'>Todo List</Text>
           <Divider my='3' />
           <Flex direction='column'>
-            {data?.todos?.map((item) => {
+            {data?.todos.map((item) => {
               return (
                 <Box mb='5' key={item.id}>
-                  <TodoItem content={item.content} />
+                  <TodoItem
+                    content={item.content}
+                    onDelete={() => onDeleteTodoHandler(item.id)}
+                  />
                 </Box>
               )
             })}

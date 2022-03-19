@@ -28,16 +28,21 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  createTodo?: Maybe<Todo>
+  createTodo: Todo
+  deleteTodo: Todo
 }
 
 export type MutationCreateTodoArgs = {
   content: Scalars['String']
 }
 
+export type MutationDeleteTodoArgs = {
+  id: Scalars['ID']
+}
+
 export type Query = {
   __typename?: 'Query'
-  todos: Array<Maybe<Todo>>
+  todos: Array<Todo>
 }
 
 export type Todo = {
@@ -46,13 +51,130 @@ export type Todo = {
   id: Scalars['ID']
 }
 
+export type CreateTodoMutationVariables = Exact<{
+  content: Scalars['String']
+}>
+
+export type CreateTodoMutation = {
+  __typename?: 'Mutation'
+  createTodo: { __typename?: 'Todo'; id: string; content: string }
+}
+
+export type DeleteTodoMutationVariables = Exact<{
+  deleteTodoId: Scalars['ID']
+}>
+
+export type DeleteTodoMutation = {
+  __typename?: 'Mutation'
+  deleteTodo: { __typename?: 'Todo'; id: string }
+}
+
 export type AllTodosQueryVariables = Exact<{ [key: string]: never }>
 
 export type AllTodosQuery = {
   __typename?: 'Query'
-  todos: Array<{ __typename?: 'Todo'; id: string; content: string } | null>
+  todos: Array<{ __typename?: 'Todo'; id: string; content: string }>
 }
 
+export const CreateTodoDocument = gql`
+  mutation CreateTodo($content: String!) {
+    createTodo(content: $content) {
+      id
+      content
+    }
+  }
+`
+export type CreateTodoMutationFn = Apollo.MutationFunction<
+  CreateTodoMutation,
+  CreateTodoMutationVariables
+>
+
+/**
+ * __useCreateTodoMutation__
+ *
+ * To run a mutation, you first call `useCreateTodoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTodoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTodoMutation, { data, loading, error }] = useCreateTodoMutation({
+ *   variables: {
+ *      content: // value for 'content'
+ *   },
+ * });
+ */
+export function useCreateTodoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateTodoMutation,
+    CreateTodoMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CreateTodoMutation, CreateTodoMutationVariables>(
+    CreateTodoDocument,
+    options,
+  )
+}
+export type CreateTodoMutationHookResult = ReturnType<
+  typeof useCreateTodoMutation
+>
+export type CreateTodoMutationResult = Apollo.MutationResult<CreateTodoMutation>
+export type CreateTodoMutationOptions = Apollo.BaseMutationOptions<
+  CreateTodoMutation,
+  CreateTodoMutationVariables
+>
+export const DeleteTodoDocument = gql`
+  mutation DeleteTodo($deleteTodoId: ID!) {
+    deleteTodo(id: $deleteTodoId) {
+      id
+    }
+  }
+`
+export type DeleteTodoMutationFn = Apollo.MutationFunction<
+  DeleteTodoMutation,
+  DeleteTodoMutationVariables
+>
+
+/**
+ * __useDeleteTodoMutation__
+ *
+ * To run a mutation, you first call `useDeleteTodoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTodoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTodoMutation, { data, loading, error }] = useDeleteTodoMutation({
+ *   variables: {
+ *      deleteTodoId: // value for 'deleteTodoId'
+ *   },
+ * });
+ */
+export function useDeleteTodoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteTodoMutation,
+    DeleteTodoMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<DeleteTodoMutation, DeleteTodoMutationVariables>(
+    DeleteTodoDocument,
+    options,
+  )
+}
+export type DeleteTodoMutationHookResult = ReturnType<
+  typeof useDeleteTodoMutation
+>
+export type DeleteTodoMutationResult = Apollo.MutationResult<DeleteTodoMutation>
+export type DeleteTodoMutationOptions = Apollo.BaseMutationOptions<
+  DeleteTodoMutation,
+  DeleteTodoMutationVariables
+>
 export const AllTodosDocument = gql`
   query AllTodos {
     todos {
@@ -237,10 +359,16 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   createTodo?: Resolver<
-    Maybe<ResolversTypes['Todo']>,
+    ResolversTypes['Todo'],
     ParentType,
     ContextType,
     RequireFields<MutationCreateTodoArgs, 'content'>
+  >
+  deleteTodo?: Resolver<
+    ResolversTypes['Todo'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeleteTodoArgs, 'id'>
   >
 }
 
@@ -248,11 +376,7 @@ export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
-  todos?: Resolver<
-    Array<Maybe<ResolversTypes['Todo']>>,
-    ParentType,
-    ContextType
-  >
+  todos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType>
 }
 
 export type TodoResolvers<
